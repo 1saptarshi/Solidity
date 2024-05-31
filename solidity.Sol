@@ -1,1 +1,362 @@
+ Let's go through various methods and features of Solidity with examples. We'll cover a wide range of topics, from basic syntax to advanced concepts.
+ 
+### 1. Basic Syntax
+ 
+#### Hello World Contract
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract HelloWorld {
+    string public greeting = "Hello, World!";
+}
+```
+ 
+### 2. State Variables and Functions
+ 
+#### Simple Storage
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract SimpleStorage {
+    uint256 public storedData;
+ 
+    function set(uint256 x) public {
+        storedData = x;
+    }
+ 
+    function get() public view returns (uint256) {
+        return storedData;
+    }
+}
+```
+ 
+### 3. Data Types and Operators
+ 
+Solidity supports several basic data types: `bool`, `uint`, `int`, `address`, `bytes`, and `string`.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract DataTypes {
+    bool public myBool = true;
+    uint public myUint = 123;
+    int public myInt = -123;
+    address public myAddress = 0x1234567890123456789012345678901234567890;
+    bytes32 public myBytes32 = "hello";
+    string public myString = "hello";
+}
+```
+ 
+### 4. Arrays and Structs
+ 
+#### Arrays
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract ArrayExample {
+    uint[] public uintArray;
+    string[] public stringArray;
+    uint[10] public fixedSizeArray;
+ 
+    function pushValue(uint value) public {
+        uintArray.push(value);
+    }
+ 
+    function getValue(uint index) public view returns (uint) {
+        return uintArray[index];
+    }
+ 
+    function getArrayLength() public view returns (uint) {
+        return uintArray.length;
+    }
+}
+```
+ 
+#### Structs
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract StructExample {
+    struct Person {
+        string name;
+        uint age;
+    }
+ 
+    Person[] public people;
+ 
+    function addPerson(string memory name, uint age) public {
+        people.push(Person(name, age));
+    }
+ 
+    function getPerson(uint index) public view returns (string memory, uint) {
+        Person storage person = people[index];
+        return (person.name, person.age);
+    }
+}
+```
+ 
+### 5. Mappings
+ 
+Mappings are key-value stores. They are particularly useful for associative arrays and hash maps.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract MappingExample {
+    mapping(address => uint) public balances;
+ 
+    function updateBalance(uint newBalance) public {
+        balances[msg.sender] = newBalance;
+    }
+ 
+    function getBalance(address user) public view returns (uint) {
+        return balances[user];
+    }
+}
+```
+ 
+### 6. Functions and Modifiers
+ 
+#### Functions
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract FunctionExample {
+    function add(uint a, uint b) public pure returns (uint) {
+        return a + b;
+    }
+ 
+    function multiply(uint a, uint b) public pure returns (uint) {
+        return a * b;
+    }
+}
+```
+ 
+#### Modifiers
+ 
+Modifiers are used to change the behavior of functions in a declarative way.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract ModifierExample {
+    address public owner;
+ 
+    constructor() {
+        owner = msg.sender;
+    }
+ 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the contract owner");
+        _;
+    }
+ 
+    function changeOwner(address newOwner) public onlyOwner {
+        owner = newOwner;
+    }
+}
+```
+ 
+### 7. Events
+ 
+Events allow logging to the Ethereum blockchain. Applications can listen to and respond to these events.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract EventExample {
+    event DataStored(uint256 data);
+ 
+    uint256 public storedData;
+ 
+    function storeData(uint256 data) public {
+        storedData = data;
+        emit DataStored(data);
+    }
+}
+```
+ 
+### 8. Inheritance
+ 
+Solidity supports multiple inheritance.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract Parent {
+    function sayHello() public pure returns (string memory) {
+        return "Hello from Parent";
+    }
+}
+ 
+contract Child is Parent {
+    function sayGoodbye() public pure returns (string memory) {
+        return "Goodbye from Child";
+    }
+}
+```
+ 
+### 9. Libraries
+ 
+Libraries are similar to contracts but are stateless and cannot store Ether.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+library Math {
+    function add(uint a, uint b) internal pure returns (uint) {
+        return a + b;
+    }
+}
+ 
+contract LibraryExample {
+    using Math for uint;
+ 
+    function addValues(uint a, uint b) public pure returns (uint) {
+        return a.add(b);
+    }
+}
+```
+ 
+### 10. Interface
+ 
+Interfaces define the functions a contract must implement.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+interface ICalculator {
+    function add(uint a, uint b) external pure returns (uint);
+    function subtract(uint a, uint b) external pure returns (uint);
+}
+ 
+contract Calculator is ICalculator {
+    function add(uint a, uint b) public pure override returns (uint) {
+        return a + b;
+    }
+ 
+    function subtract(uint a, uint b) public pure override returns (uint) {
+        return a - b;
+    }
+}
+```
+ 
+### 11. Error Handling
+ 
+Solidity uses `require`, `assert`, and `revert` for error handling.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract ErrorHandling {
+    function testRequire(uint _i) public pure {
+        require(_i > 10, "Input must be greater than 10");
+    }
+ 
+    function testRevert(uint _i) public pure {
+        if (_i <= 10) {
+            revert("Input must be greater than 10");
+        }
+    }
+ 
+    function testAssert(uint _i) public pure {
+        assert(_i > 10);
+    }
+}
+```
+ 
+### 12. Payable Functions
+ 
+Payable functions can receive Ether.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract PayableExample {
+    address public owner;
+ 
+    constructor() {
+        owner = msg.sender;
+    }
+ 
+    function deposit() public payable {}
+ 
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+ 
+    function withdraw(uint amount) public {
+        require(msg.sender == owner, "Only owner can withdraw");
+        payable(owner).transfer(amount);
+    }
+}
+```
+ 
+### 13. Fallback and Receive Functions
+ 
+Fallback functions are executed when a contract receives Ether without any data.
+ 
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+ 
+contract FallbackExample {
+    event FallbackCalled(address sender, uint value);
+ 
+    fallback() external payable {
+        emit FallbackCalled(msg.sender, msg.value);
+    }
+ 
+    receive() external payable {
+        emit FallbackCalled(msg.sender, msg.value);
+    }
+}
+```
+ 
+### 14. Contract Deployment and Interaction
+ 
+Deploy the contract using Truffle, Remix, or Hardhat. For interaction, use Web3.js or Ethers.js in JavaScript, or Brownie in Python.
+ 
+#### Example with Web3.js
+ 
+```javascript
+const Web3 = require('web3');
+const contract = require('@truffle/contract');
+const SimpleStorageJSON = require('./build/contracts/SimpleStorage.json');
+ 
+const web3 = new Web3('http://127.0.0.1:7545'); // Ganache default port
+const SimpleStorage = contract(SimpleStorageJSON);
+SimpleStorage.setProvider(web3.currentProvider);
+ 
+(async () => {
+    const accounts = await web3.eth.getAccounts();
+    const instance = await SimpleStorage.deployed();
+ 
+    // Set value
+    await instance.set(42, { from: accounts[0] });
+    console.log('Value set to 42');
+ 
+    // Get value
+    const value = await instance.get.call();
+    console.log('Stored value:', value.toNumber());
+})();
 
